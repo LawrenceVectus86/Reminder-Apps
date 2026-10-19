@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ingat – Pengingat Kaca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#eceae6;--bg2:#d9d8d4;--ink:#1c1b19;--mut:#46433d;--hi:rgba(255,255,255,.4);--glass:rgba(255,255,255,.18);--line:rgba(255,255,255,.6);--shade:rgba(60,55,40,.16);--dash:rgba(40,38,32,.28);--orb:rgba(255,255,255,.9);
+--serif:"Instrument Serif","Iowan Old Style",Georgia,serif;--sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1d1d1f;--bg2:#101011;--ink:#f1eee7;--mut:#9a968c;--hi:rgba(255,255,255,.16);--glass:rgba(255,255,255,.08);--line:rgba(255,255,255,.18);--shade:rgba(0,0,0,.5);--dash:rgba(255,255,255,.3);--orb:rgba(120,120,130,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#1d1d1f;--bg2:#101011;--ink:#f1eee7;--mut:#9a968c;--hi:rgba(255,255,255,.16);--glass:rgba(255,255,255,.08);--line:rgba(255,255,255,.18);--shade:rgba(0,0,0,.5);--dash:rgba(255,255,255,.3);--orb:rgba(120,120,130,.35);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg1);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--wall,linear-gradient(135deg,#5f9bd3,#e8dccb));background-size:cover;background-position:center}
+:root[data-theme="dark"] body::before{filter:brightness(.4) saturate(1.1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::before{filter:brightness(.4) saturate(1.1)}}
+:root{--spec:inset 1.5px 1.5px 1px rgba(255,255,255,.9),inset -1.5px -1.5px 1px rgba(255,255,255,.4),inset 0 0 26px rgba(255,255,255,.2)}
+.cr .card,.cr .panel,.cr .toast,.cr .sheet{backdrop-filter:url(#lg) blur(var(--blur,6px)) saturate(1.7) brightness(1.06)}
+.cr .ring,.cr .avatar,.cr .chip,.cr .bar{backdrop-filter:url(#lgs) blur(calc(var(--blur,6px)*.5)) saturate(1.6)}
+.card::before,.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.38),transparent 36%,transparent 68%,rgba(255,255,255,.2))}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:12px}
+.app{max-width:440px;margin:0 auto;padding:18px 20px 150px}
+.top{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:500}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.02em}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(20px);color:var(--mut)}
+h1{font-family:var(--serif);font-weight:400;font-size:46px;line-height:1.02;text-align:center;margin:26px 0 8px;letter-spacing:-.01em}
+.sub{text-align:center;color:var(--mut);font-size:14px;margin:0 0 6px}
+.stack{position:relative;height:300px;margin:18px 0 8px}
+.card{position:absolute;left:12%;top:24px;width:76%;height:232px;border-radius:30px;padding:20px 22px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;
+background:linear-gradient(150deg,var(--hi),color-mix(in srgb,color-mix(in srgb,var(--acc,#d9cfae) 40%,var(--t)) 30%,transparent));
+border:1px solid var(--line);backdrop-filter:blur(8px) saturate(1.7);-webkit-backdrop-filter:blur(8px) saturate(1.7);
+box-shadow:var(--spec),0 24px 40px -18px var(--shade);
+transform-origin:0 100%;transition:transform .55s cubic-bezier(.2,.9,.25,1.05),opacity .4s}
+.card .r{display:flex;justify-content:space-between;align-items:baseline}
+.card .cat{font-family:var(--serif);font-size:20px}.card .cat i{color:var(--mut)}
+.card .t{font-weight:600;font-size:15px}
+.card .ttl{font-family:var(--serif);font-size:30px;line-height:1.05;max-width:92%;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .rel{font-family:var(--serif);font-size:22px}.card .dt{font-weight:600;font-size:14px;letter-spacing:.04em}
+.late{color:#b3402f}
+@media (prefers-color-scheme:dark){.late{color:#ff9a86}}
+.acts{display:flex;justify-content:center;gap:26px;margin:6px 0 30px}
+.act{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);width:78px}
+.ring{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(4px) saturate(1.6);position:relative;box-shadow:var(--spec);transition:transform .2s}
+.ring::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px dashed var(--dash)}
+.act:active .ring{transform:scale(.93)}
+.act:disabled{opacity:.4;cursor:default}
+.panel{position:relative;background:color-mix(in srgb,var(--bg1) 34%,transparent);border:1px solid var(--line);border-radius:28px;padding:8px;backdrop-filter:blur(8px) saturate(1.6);-webkit-backdrop-filter:blur(8px) saturate(1.6);box-shadow:var(--spec),0 20px 40px -24px var(--shade)}
+.row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:20px}
+.row+.row{border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.chk{width:26px;height:26px;flex:none;border-radius:50%;border:1.5px solid var(--dash);display:grid;place-items:center;color:transparent;transition:.2s}
+.done .chk{background:var(--ink);color:var(--bg1);border-color:var(--ink)}
+.done .rt{text-decoration:line-through;color:var(--mut)}
+.row .rb{flex:1;min-width:0;text-align:left}
+.rt{font-weight:500;font-size:15.5px;overflow-wrap:anywhere}
+.rm{font-size:12.5px;color:var(--mut);margin-top:2px}
+.del{color:var(--mut);padding:8px;border-radius:50%}
+.empty{padding:34px 20px;text-align:center;color:var(--mut);font-size:14px}
+.empty b{display:block;font-family:var(--serif);font-weight:400;font-size:24px;color:var(--ink);margin-bottom:4px}
+.bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:4px;padding:7px;border-radius:999px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(8px) saturate(1.7);-webkit-backdrop-filter:blur(8px) saturate(1.7);box-shadow:var(--spec),0 18px 40px -14px var(--shade);z-index:5}
+.pill{padding:11px 16px;border-radius:999px;font-size:14px;font-weight:500;color:var(--mut)}
+.pill.on{background:var(--hi);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.add{width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--bg1);display:grid;place-items:center;margin-left:4px}
+.scrim{position:fixed;inset:0;background:rgba(20,20,18,.28);backdrop-filter:blur(6px);z-index:9;display:flex;align-items:flex-end;justify-content:center;animation:f .25s}
+.sheet{width:100%;max-width:440px;border-radius:34px 34px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));background:linear-gradient(160deg,var(--hi),var(--glass)),color-mix(in srgb,var(--bg1) 40%,transparent);border:1px solid var(--line);box-shadow:var(--spec);backdrop-filter:blur(14px) saturate(1.7);-webkit-backdrop-filter:blur(14px) saturate(1.7);animation:u .4s cubic-bezier(.2,.9,.25,1)}
+.sheet h2{font-family:var(--serif);font-weight:400;font-size:32px;margin:0 0 16px}
+.fld{width:100%;padding:15px 16px;border-radius:18px;border:1px solid var(--line);background:var(--glass);margin-bottom:12px;font-size:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 18px}
+.chip{padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass);font-size:13.5px}
+.chip.on{background:var(--ink);color:var(--bg1);border-color:var(--ink)}
+.go{width:100%;padding:16px;border-radius:999px;background:var(--ink);color:var(--bg1);font-weight:600}
+.go:disabled{opacity:.4}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(400px,calc(100% - 28px));z-index:20;padding:14px 16px;border-radius:26px;background:color-mix(in srgb,var(--bg1) 42%,transparent);border:1px solid var(--line);backdrop-filter:blur(10px) saturate(1.7);-webkit-backdrop-filter:blur(10px) saturate(1.7);box-shadow:var(--spec),0 20px 40px -14px var(--shade);display:flex;align-items:center;gap:12px;animation:d .5s cubic-bezier(.2,.9,.25,1.1)}
+.toast .rt{flex:1}.toast button{font-size:13px;font-weight:600;padding:9px 12px;border-radius:999px;background:var(--hi)}
+@keyframes f{from{opacity:0}}@keyframes u{from{transform:translateY(100%)}}@keyframes d{from{transform:translate(-50%,-140%)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.card,.panel,.bar,.ring,.toast,.sheet,.avatar,.chip{backdrop-filter:blur(var(--blur,6px)) saturate(1.7);-webkit-backdrop-filter:blur(var(--blur,6px)) saturate(1.7)}
+.add,.go,.chip.on,.done .chk{background:var(--acc2,#3a3834);border-color:var(--acc2,#3a3834);color:#fff}
+.avatar{color:var(--ink)}
+.scrim.nb{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(0,0,0,.05)}
+.sheet.set{max-height:62vh;overflow:auto;padding-top:20px}
+.hd{display:flex;justify-content:space-between;align-items:center}.hd h2{margin:0}
+.lb{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;font-weight:600;margin:18px 0 9px}
+.set .chips{margin:0}
+.rng{width:100%;accent-color:var(--acc2)}
+.sws{display:flex;gap:12px;flex-wrap:wrap}
+.sw{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);box-shadow:var(--spec)}
+.wl{width:56px;height:72px;border-radius:16px;border:1px solid var(--line);box-shadow:var(--spec);cursor:pointer}
+.wl.up{display:grid;place-items:center;font-size:11.5px;text-align:center;background:var(--glass);padding:4px}
+.sw.on,.wl.on{outline:2px solid var(--ink);outline-offset:2px}
+.go.rs{margin-top:22px;background:var(--glass);color:var(--ink);border:1px solid var(--line)}
+.stack.fl{height:auto;display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:16px -20px 10px;padding:8px 20px 22px}
+.stack.fl.grid{display:grid;grid-template-columns:1fr 1fr;overflow:visible;margin:16px 0 10px;padding:0 0 12px}
+.card.fl{position:relative;left:auto;top:auto;width:auto;height:210px;flex:0 0 78%;scroll-snap-align:center;transform-origin:center}
+.grid .card.fl{height:178px;flex:none;padding:14px 16px;border-radius:24px}
+.grid .card .ttl{font-size:22px;-webkit-line-clamp:2}.grid .card .cat{font-size:15px}.grid .card .rel{font-size:16px}
+.card.sel{outline:2px solid var(--acc2,var(--ink));outline-offset:3px}
+.cal{margin:0 0 26px;perspective:1100px;touch-action:pan-y}
+.ch{display:flex;align-items:center;justify-content:space-between;margin:0 4px 14px}
+.ch h3{font-family:var(--serif);font-weight:400;font-size:30px;margin:0;text-transform:capitalize}
+.ch button{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:1px solid var(--line);box-shadow:var(--spec)}
+.cb{transform-style:preserve-3d;transform:rotateX(calc(16deg + var(--rx,0deg))) rotateY(var(--ry,0deg));transition:transform .25s ease-out;padding:12px 12px 14px;border-radius:30px;background:color-mix(in srgb,var(--bg1) 30%,transparent);border:1px solid var(--line);box-shadow:var(--spec),0 40px 50px -30px var(--shade)}
+.wd{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;text-align:center;font-size:11.5px;color:var(--mut);margin-bottom:8px;font-weight:600}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;transform-style:preserve-3d;transform-origin:50% 100%}
+.mg.nx{animation:nx .6s cubic-bezier(.2,.9,.25,1) both}.mg.pv{animation:pv .6s cubic-bezier(.2,.9,.25,1) both}
+@keyframes nx{from{transform:rotateX(-80deg) translateZ(-40px);opacity:0}}
+@keyframes pv{from{transform:rotateX(80deg) translateZ(-40px);opacity:0}}
+.cell{position:relative;aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:14px;font-weight:500;transform-style:preserve-3d;background:linear-gradient(160deg,rgba(255,255,255,.5),rgba(255,255,255,.12));border:1px solid var(--line);box-shadow:inset 1px 1px 1px rgba(255,255,255,.8),0 6px 10px -6px var(--shade);transition:transform .3s cubic-bezier(.2,.9,.25,1.2),box-shadow .3s,background .3s}
+.cell:hover{transform:translateZ(14px)}
+.cell.has{transform:translateZ(16px);box-shadow:inset 1px 1px 1px rgba(255,255,255,.9),0 16px 18px -8px var(--shade);background:linear-gradient(160deg,rgba(255,255,255,.75),color-mix(in srgb,var(--acc,#d9cfae) 45%,rgba(255,255,255,.2)))}
+.cell.has:hover{transform:translateZ(30px) scale(1.04)}
+.cell.sel{transform:translateZ(36px) scale(1.06);background:var(--acc2,#3a3834);color:#fff;border-color:var(--acc2,#3a3834);box-shadow:0 24px 24px -10px var(--shade)}
+.cell.now::after{content:"";position:absolute;inset:-3px;border-radius:17px;border:2px solid var(--acc2,var(--ink));animation:pl 2.2s ease-out infinite;pointer-events:none}
+@keyframes pl{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.28)}}
+.cell.fin .num{opacity:.5}
+.dots{display:flex;gap:3px;height:9px;transform:translateZ(22px);transform-style:preserve-3d}
+.dots i{width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff,var(--c) 45%,color-mix(in srgb,var(--c) 70%,#000));box-shadow:0 0 8px var(--c),0 3px 4px rgba(0,0,0,.3);animation:pop .6s cubic-bezier(.2,1.8,.4,1) backwards,bob 2.4s ease-in-out calc(.6s + var(--j)*.25s) infinite}
+@keyframes pop{from{transform:scale(0) translateZ(60px)}}
+@keyframes bob{50%{transform:translateY(-3px) translateZ(8px)}}
+.cell em{position:absolute;top:3px;right:5px;font-size:9.5px;font-style:normal;font-weight:700;transform:translateZ(24px)}
+.cell.sel .dots i{box-shadow:0 0 10px #fff}
+.cf{display:flex;justify-content:space-between;align-items:center;margin:14px 4px 0;font-size:14px;font-weight:500}
+.cf button{padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--line);font-size:13px}
+.lgd{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:14px 0 0;font-size:12px;color:var(--mut)}
+.lgd span{display:flex;align-items:center;gap:6px}.lgd i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="lg" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='rgb(255,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='1' x2='0'%3E%3Cstop offset='0' stop-color='rgb(0,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='c' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='rgb(128,255,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='d' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='rgb(128,0,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='rgb(128,128,128)'/%3E%3Crect width='16' height='100' fill='url(%23a)'/%3E%3Crect x='84' width='16' height='100' fill='url(%23b)'/%3E%3Crect x='16' width='68' height='16' fill='url(%23c)'/%3E%3Crect x='16' y='84' width='68' height='16' fill='url(%23d)'/%3E%3C/svg%3E" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="60" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="lgs" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='rgb(255,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='1' x2='0'%3E%3Cstop offset='0' stop-color='rgb(0,128,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='c' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='rgb(128,255,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3ClinearGradient id='d' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='rgb(128,0,128)'/%3E%3Cstop offset='1' stop-color='rgb(128,128,128)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='rgb(128,128,128)'/%3E%3Crect width='22' height='100' fill='url(%23a)'/%3E%3Crect x='78' width='22' height='100' fill='url(%23b)'/%3E%3Crect x='22' width='56' height='22' fill='url(%23c)'/%3E%3Crect x='22' y='78' width='56' height='22' fill='url(%23d)'/%3E%3C/svg%3E" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="18" xChannelSelector="R" yChannelSelector="G"/></filter>
+</defs></svg>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState,useEffect,useRef}=React;
+const html=htm.bind(React.createElement);
+const CATS=[["Pribadi","#d9cfae"],["Kerja","#bcc7da"],["Kesehatan","#dcbfc4"],["Belanja","#bfd2c1"]];
+const tint=c=>(CATS.find(x=>x[0]===c)||CATS[0])[1];
+const T={
+id:{lang:"id",loc:"id-ID",h1a:"Pengingat",h1b:"Anda",wait:"menunggu",doneN:"selesai",clear:"Semua beres untuk saat ini",finish:"Selesai",snz:"Tunda 10 mnt",del:"Hapus",all:"Semua",today:"Hari ini",doneF:"Selesai",
+ e1:["Belum ada pengingat","Ketuk tombol + untuk membuat yang pertama."],e2:["Hari ini kosong","Tidak ada pengingat yang jatuh tempo hari ini."],e3:["Belum ada yang selesai","Pengingat yang Anda selesaikan muncul di sini."],e4:["Tanggal ini kosong","Ketuk + untuk menambah pengingat."],clr:"Lihat semua",
+ nw:"Pengingat baru",ph:"Apa yang perlu diingat?",save:"Simpan pengingat",rem:"Reminder",ec1:"Pengingat",ec2:"Kosong",nothing:"Tidak ada yang tertunda",enjoy:"Nikmati harimu",later:"Tunda",time:"Waktunya!",
+ set:"Pengaturan",blur:"Blur kaca",model:"Model kartu",m:{stack:"Tumpuk",slide:"Geser",grid:"Kisi"},language:"Bahasa",theme:"Tema warna",modes:{auto:"Otomatis",light:"Terang",dark:"Gelap"},acc:"Warna aksen",
+ wall:"Wallpaper",up:"Unggah foto",reset:"Atur ulang",close:"Tutup",w:{city:"Kota",sunset:"Senja",sea:"Laut",forest:"Hutan",aurora:"Aurora",plain:"Polos"},
+ cats:{Pribadi:"Pribadi",Kerja:"Kerja",Kesehatan:"Kesehatan",Belanja:"Belanja"},now:"sekarang",min:"menit",hr:"jam",day:"hari",mn:"mnt",
+ fut:u=>"dalam "+u,past:u=>u+" lalu",add:"Tambah pengingat",mk:"Tandai selesai",un:"Tandai belum selesai",dl:"Hapus pengingat",rl:"Pengingat: ",tl:"Judul pengingat",tm:"Waktu pengingat"},
+en:{lang:"en",loc:"en-US",h1a:"Your",h1b:"Reminders",wait:"pending",doneN:"done",clear:"All clear for now",finish:"Done",snz:"Snooze 10m",del:"Delete",all:"All",today:"Today",doneF:"Done",
+ e1:["No reminders yet","Tap + to create your first one."],e2:["Nothing today","No reminders are due today."],e3:["Nothing done yet","Reminders you complete show up here."],e4:["Nothing on this date","Tap + to add a reminder."],clr:"Show all",
+ nw:"New reminder",ph:"What do you need to remember?",save:"Save reminder",rem:"Reminder",ec1:"No",ec2:"Reminders",nothing:"Nothing pending",enjoy:"Enjoy your day",later:"Snooze",time:"It’s time!",
+ set:"Settings",blur:"Glass blur",model:"Card style",m:{stack:"Stack",slide:"Slide",grid:"Grid"},language:"Language",theme:"Color theme",modes:{auto:"Auto",light:"Light",dark:"Dark"},acc:"Accent color",
+ wall:"Wallpaper",up:"Upload photo",reset:"Reset",close:"Close",w:{city:"City",sunset:"Sunset",sea:"Sea",forest:"Forest",aurora:"Aurora",plain:"Plain"},
+ cats:{Pribadi:"Personal",Kerja:"Work",Kesehatan:"Health",Belanja:"Shopping"},now:"now",min:"min",hr:"h",day:"d",mn:"min",
+ fut:u=>"in "+u,past:u=>u+" ago",add:"Add reminder",mk:"Mark done",un:"Mark not done",dl:"Delete reminder",rl:"Reminder: ",tl:"Reminder title",tm:"Reminder time"}};
+const ACC={pearl:["#d9cfae","#3a3834"],ocean:["#9fc4ee","#1f5f9e"],rose:["#f0b8c8","#b23a66"],mint:["#a9dcc3","#1f7a57"],violet:["#c6b8f0","#5b45b5"]};
+const WALL={
+city:"radial-gradient(30% 18% at 22% 30%,rgba(255,255,255,.55),transparent 70%),radial-gradient(26% 16% at 85% 62%,rgba(255,236,205,.6),transparent 70%),repeating-linear-gradient(135deg,transparent 0 46px,rgba(255,255,255,.28) 46px 50px,rgba(90,70,50,.16) 50px 54px),linear-gradient(135deg,#1f5f9e 0%,#5f9bd3 28%,#e8dccb 52%,#c4b3a0 74%,#8b8d99 100%)",
+sunset:"radial-gradient(40% 22% at 70% 70%,rgba(255,240,190,.7),transparent 70%),linear-gradient(160deg,#2b2a5c 0%,#8a4f8f 30%,#ee8a6b 62%,#ffd9a0 100%)",
+sea:"radial-gradient(40% 25% at 30% 25%,rgba(255,255,255,.4),transparent 70%),linear-gradient(170deg,#0e6a86 0%,#2aa0a8 40%,#bfe6d8 75%,#f1ead6 100%)",
+forest:"radial-gradient(35% 20% at 75% 25%,rgba(255,255,220,.45),transparent 70%),linear-gradient(160deg,#0f3b2b,#2f7a52 45%,#a8cf9a 80%,#efe6c4)",
+aurora:"radial-gradient(50% 30% at 70% 20%,rgba(120,255,200,.6),transparent 70%),radial-gradient(40% 30% at 20% 60%,rgba(170,120,255,.6),transparent 70%),linear-gradient(180deg,#0d1030,#1d2a5a 60%,#3b2a6b)",
+plain:"linear-gradient(180deg,#eceae6,#d6d4cf)"};
+const P={check:"M5 12.5l4.5 4.5L19 7.5",plus:"M12 5v14M5 12h14",clock:"M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18",trash:"M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12",bell:"M6 16v-5a6 6 0 0112 0v5l1.5 2h-15zM10 20h4",sliders:"M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M6 14v6"};
+const Ic=({n,s=22})=>html`<svg viewBox="0 0 24 24" width=${s} height=${s} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d=${P[n]}/></svg>`;
+const KEY="ingat.v1",CK="ingat.cfg";
+const DEF={blur:6,model:"stack",lang:"id",mode:"auto",accent:"pearl",wall:"city",img:null};
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const save=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+const loadC=()=>{try{return{...DEF,...JSON.parse(localStorage.getItem(CK))}}catch(e){return DEF}};
+const saveC=v=>{try{localStorage.setItem(CK,JSON.stringify(v))}catch(e){}};
+function apply(c){const r=document.documentElement,s=r.style;
+ s.setProperty("--blur",c.blur+"px");
+ if(c.mode==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",c.mode);
+ const a=ACC[c.accent]||ACC.pearl;s.setProperty("--acc",a[0]);s.setProperty("--acc2",a[1]);
+ s.setProperty("--wall",c.wall==="custom"&&c.img?`url("${c.img}") center/cover no-repeat`:WALL[c.wall]||WALL.city);
+ r.lang=c.lang}
+const hm=(ms,t)=>new Date(ms).toLocaleTimeString(t.loc,{hour:"2-digit",minute:"2-digit"}).replace(".",":");
+const dm=(ms,t)=>new Date(ms).toLocaleDateString(t.loc,{weekday:"short",day:"numeric",month:"short"});
+const sameDay=(a,b)=>new Date(a).toDateString()===new Date(b).toDateString();
+const rel=(at,now,t)=>{const m=Math.round((at-now)/6e4),a=Math.abs(m);if(m===0)return t.now;
+ const u=a<60?a+" "+t.min:a<1440?Math.floor(a/60)+" "+t.hr+(a%60?" "+a%60+" "+t.mn:""):Math.floor(a/1440)+" "+t.day;
+ return m<0?t.past(u):t.fut(u)};
+const local=ms=>{const d=new Date(ms-new Date(ms).getTimezoneOffset()*6e4);return d.toISOString().slice(0,16)};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const Chips=({c,set,k,opts})=>html`<div class="chips">${opts.map(([v,l])=>html`<button type="button" key=${v} class=${"chip"+(c[k]===v?" on":"")} onClick=${()=>set({[k]:v})}>${l}</button>`)}</div>`;
+
+function Sheet({t,init,onClose,onSave}){
+ const [title,setTitle]=useState("");
+ const [at,setAt]=useState(local(init||Date.now()+36e5));
+ const [cat,setCat]=useState("Pribadi");
+ const ok=title.trim()&&at;
+ return html`<div class="scrim" onClick=${e=>e.target===e.currentTarget&&onClose()}>
+  <form class="sheet" onSubmit=${e=>{e.preventDefault();if(ok)onSave({id:uid(),title:title.trim(),at:new Date(at).getTime(),cat,done:false})}}>
+   <h2>${t.nw}</h2>
+   <input class="fld" autoFocus placeholder=${t.ph} value=${title} onInput=${e=>setTitle(e.target.value)} maxLength="90" aria-label=${t.tl}/>
+   <input class="fld" type="datetime-local" value=${at} onInput=${e=>setAt(e.target.value)} aria-label=${t.tm}/>
+   <div class="chips">${CATS.map(([c])=>html`<button type="button" key=${c} class=${"chip"+(cat===c?" on":"")} onClick=${()=>setCat(c)}>${t.cats[c]}</button>`)}</div>
+   <button class="go" disabled=${!ok}>${t.save}</button>
+  </form></div>`;
+}
+
+function Settings({c,set,t,onClose}){
+ const pick=f=>{if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=im.width*k;cv.height=im.height*k;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);set({wall:"custom",img:cv.toDataURL("image/jpeg",.8)})};im.src=rd.result};rd.readAsDataURL(f)};
+ return html`<div class="scrim nb" onClick=${e=>e.target===e.currentTarget&&onClose()}>
+  <div class="sheet set" role="dialog" aria-label=${t.set}>
+   <div class="hd"><h2>${t.set}</h2><button class="chip on" onClick=${onClose}>${t.close}</button></div>
+   <div class="lb"><span>${t.blur}</span><b>${c.blur}px</b></div>
+   <input class="rng" type="range" min="0" max="30" value=${c.blur} onInput=${e=>set({blur:+e.target.value})} aria-label=${t.blur}/>
+   <div class="lb">${t.model}</div>
+   <${Chips} c=${c} set=${set} k="model" opts=${Object.keys(t.m).map(k=>[k,t.m[k]])}/>
+   <div class="lb">${t.language}</div>
+   <${Chips} c=${c} set=${set} k="lang" opts=${[["id","Indonesia"],["en","English"]]}/>
+   <div class="lb">${t.theme}</div>
+   <${Chips} c=${c} set=${set} k="mode" opts=${Object.keys(t.modes).map(k=>[k,t.modes[k]])}/>
+   <div class="lb">${t.acc}</div>
+   <div class="sws">${Object.keys(ACC).map(k=>html`<button key=${k} class=${"sw"+(c.accent===k?" on":"")} aria-label=${k} style=${{background:`linear-gradient(135deg,${ACC[k][0]},${ACC[k][1]})`}} onClick=${()=>set({accent:k})}/>`)}</div>
+   <div class="lb">${t.wall}</div>
+   <div class="sws">
+    ${Object.keys(WALL).map(k=>html`<button key=${k} class=${"wl"+(c.wall===k?" on":"")} aria-label=${t.w[k]} title=${t.w[k]} style=${{background:WALL[k],backgroundSize:"cover"}} onClick=${()=>set({wall:k})}/>`)}
+    <label class=${"wl up"+(c.wall==="custom"?" on":"")} style=${c.img?{background:`url("${c.img}") center/cover`}:null}><input type="file" accept="image/*" hidden onChange=${e=>pick(e.target.files[0])}/>${c.img?"":t.up}</label>
+   </div>
+   <button class="go rs" onClick=${()=>set(DEF)}>${t.reset}</button>
+  </div></div>`;
+}
+
+const CC={Pribadi:"#e3a92f",Kerja:"#3f7fe0",Kesehatan:"#e5547a",Belanja:"#2fae77"};
+function Cal({items,now,t,day,setDay}){
+ const [mo,setMo]=useState(()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1)});
+ const [dir,setDir]=useState(1);
+ const ref=useRef();
+ const go=k=>{setDir(k);setMo(new Date(mo.getFullYear(),mo.getMonth()+k,1))};
+ const first=(mo.getDay()+6)%7,dim=new Date(mo.getFullYear(),mo.getMonth()+1,0).getDate();
+ const key=d=>d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+ const by={};items.forEach(r=>{const k=key(new Date(r.at));(by[k]=by[k]||[]).push(r)});
+ const cells=[];for(let i=0;i<first;i++)cells.push(null);for(let d=1;d<=dim;d++)cells.push(new Date(mo.getFullYear(),mo.getMonth(),d));
+ const tk=key(new Date(now)),sk=day?key(new Date(day)):"";
+ const tilt=(x,y)=>{const e=ref.current;if(e){e.style.setProperty("--ry",x+"deg");e.style.setProperty("--rx",y+"deg")}};
+ const mv=e=>{const b=e.currentTarget.getBoundingClientRect();tilt(((e.clientX-b.left)/b.width-.5)*14,-((e.clientY-b.top)/b.height-.5)*12)};
+ return html`<section class="cal" onPointerMove=${mv} onPointerLeave=${()=>tilt(0,0)}>
+  <div class="ch"><button aria-label="‹" onClick=${()=>go(-1)}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+   <h3>${mo.toLocaleDateString(t.loc,{month:"long",year:"numeric"})}</h3>
+   <button aria-label="›" onClick=${()=>go(1)}><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+  <div class="cb" ref=${ref}>
+   <div class="wd">${[0,1,2,3,4,5,6].map(i=>html`<span key=${i}>${new Date(2024,0,1+i).toLocaleDateString(t.loc,{weekday:"short"}).slice(0,3)}</span>`)}</div>
+   <div class=${"mg "+(dir>0?"nx":"pv")} key=${mo.getTime()}>
+    ${cells.map((d,i)=>{if(!d)return html`<span key=${"e"+i}/>`;
+     const k=key(d),rs=by[k]||[],pend=rs.filter(r=>!r.done);
+     const cls="cell"+(k===tk?" now":"")+(k===sk?" sel":"")+(pend.length?" has":rs.length?" fin":"");
+     return html`<button key=${k} class=${cls} onClick=${()=>setDay(k===sk?null:d.getTime())} aria-label=${d.toLocaleDateString(t.loc,{dateStyle:"full"})+(rs.length?" ("+rs.length+")":"")}>
+      <span class="num">${d.getDate()}</span>
+      <span class="dots">${pend.slice(0,3).map((r,j)=>html`<i key=${r.id} style=${{"--c":CC[r.cat]||CC.Pribadi,"--j":j}}/>`)}</span>
+      ${pend.length>3&&html`<em>+${pend.length-3}</em>`}
+     </button>`})}
+   </div>
+  </div>
+  ${day?html`<div class="cf"><span>${new Date(day).toLocaleDateString(t.loc,{weekday:"long",day:"numeric",month:"long"})}</span><button onClick=${()=>setDay(null)}>${t.clr}</button></div>`:html`<div class="lgd">${Object.keys(CC).map(k=>html`<span key=${k} style=${{"--c":CC[k]}}><i/>${t.cats[k]}</span>`)}</div>`}
+ </section>`;
+}
+function App(){
+ const [items,setItems]=useState(load);
+ const [c,setC]=useState(loadC);
+ const [now,setNow]=useState(Date.now());
+ const [sel,setSel]=useState(0);
+ const [filter,setFilter]=useState("all");
+ const [sheet,setSheet]=useState(false);
+ const [cfg,setCfg]=useState(false);
+ const [day,setDay]=useState(null);
+ const [toast,setToast]=useState(null);
+ const fired=useRef(new Set());
+ const t=T[c.lang]||T.id;
+ const set=p=>setC(v=>({...v,...p}));
+ useEffect(()=>{apply(c);saveC(c)},[c]);
+ useEffect(()=>{save(items)},[items]);
+ useEffect(()=>{const i=setInterval(()=>setNow(Date.now()),15000);return()=>clearInterval(i)},[]);
+ useEffect(()=>{items.forEach(r=>{const k=r.id+":"+r.at;
+  if(r.done||r.at>now||fired.current.has(k))return;
+  fired.current.add(k);
+  if(now-r.at<3e5){setToast(r);try{if("Notification" in window&&Notification.permission==="granted")new Notification(t.time,{body:r.title})}catch(e){}}
+ })},[now,items]);
+ const up=items.filter(r=>!r.done).sort((a,b)=>a.at-b.at);
+ const fl=c.model!=="stack";
+ const shown=up.slice(0,fl?12:5),n=shown.length,s=Math.min(sel,Math.max(n-1,0)),cur=shown[s];
+ const patch=(id,f)=>setItems(v=>v.map(r=>r.id===id?{...r,...f}:r));
+ const finish=id=>{patch(id,{done:true});setToast(null)};
+ const snooze=id=>{patch(id,{at:Date.now()+6e5});setToast(null)};
+ const remove=id=>setItems(v=>v.filter(r=>r.id!==id));
+ const base=filter==="done"?items.filter(r=>r.done).sort((a,b)=>b.at-a.at):filter==="today"?up.filter(r=>sameDay(r.at,now)):up;
+ const ask=()=>{try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(e){}};
+ const list=day?items.filter(r=>sameDay(r.at,day)).sort((a,b)=>a.at-b.at):base;
+ const msg=day?t.e4:{all:t.e1,today:t.e2,done:t.e3}[filter];
+ const ndone=items.filter(r=>r.done).length;
+ return html`<main class="app">
+  <div class="top"><span>${hm(now,t)}</span><span class="logo">ingat</span><button class="avatar" aria-label=${t.set} onClick=${()=>setCfg(true)}><${Ic} n="sliders" s=${18}/></button></div>
+  <h1>${t.h1a}<br/>${t.h1b}</h1>
+  <p class="sub">${n?up.length+" "+t.wait+" · "+ndone+" "+t.doneN:t.clear}</p>
+  <div class=${"stack"+(fl?" fl "+c.model:"")}>
+   ${n===0?html`<div class=${"card"+(fl?" fl":"")} style=${{"--t":"#d9cfae"}}><div class="r"><span class="cat">${t.ec1} <i>${t.ec2}</i></span></div><div class="ttl">${t.nothing}</div><div class="rel">${t.enjoy}</div></div>`
+   :shown.map((r,i)=>{const d=(i-s+n)%n;const late=r.at<now;
+    return html`<button key=${r.id} class=${"card"+(fl?" fl":"")+(fl&&i===s?" sel":"")} onClick=${()=>setSel(i)} aria-label=${t.rl+r.title} style=${fl?{"--t":tint(r.cat)}:{"--t":tint(r.cat),zIndex:n-d,opacity:d>3?0:1-d*.12,transform:`translateX(${d*30}px) translateY(${-d*7}px) rotate(${d*2.4}deg) scale(${1-d*.055})`}}>
+     <div class="r"><span class="cat">${t.cats[r.cat]||r.cat} <i>${t.rem}</i></span><span class="t">${hm(r.at,t)}</span></div>
+     <div class="ttl">${r.title}</div>
+     <div class="r"><span class=${"rel"+(late?" late":"")}>${rel(r.at,now,t)}</span><span class="dt">${dm(r.at,t)}</span></div>
+    </button>`})}
+  </div>
+  <div class="acts">
+   <button class="act" disabled=${!cur} onClick=${()=>cur&&finish(cur.id)}><span class="ring"><${Ic} n="check"/></span>${t.finish}</button>
+   <button class="act" disabled=${!cur} onClick=${()=>cur&&snooze(cur.id)}><span class="ring"><${Ic} n="clock"/></span>${t.snz}</button>
+   <button class="act" disabled=${!cur} onClick=${()=>cur&&remove(cur.id)}><span class="ring"><${Ic} n="trash"/></span>${t.del}</button>
+  </div>
+  <${Cal} items=${items} now=${now} t=${t} day=${day} setDay=${setDay}/>
+  <section class="panel" aria-live="polite">
+   ${list.length===0?html`<div class="empty"><b>${msg[0]}</b>${msg[1]}</div>`:list.map(r=>html`
+    <div key=${r.id} class=${"row"+(r.done?" done":"")}>
+     <button class="chk" aria-label=${r.done?t.un:t.mk} onClick=${()=>patch(r.id,{done:!r.done})}><${Ic} n="check" s=${15}/></button>
+     <div class="rb"><div class="rt">${r.title}</div><div class=${"rm"+(!r.done&&r.at<now?" late":"")}>${t.cats[r.cat]||r.cat} · ${dm(r.at,t)}, ${hm(r.at,t)}</div></div>
+     <button class="del" aria-label=${t.dl} onClick=${()=>remove(r.id)}><${Ic} n="trash" s=${18}/></button>
+    </div>`)}
+  </section>
+  <nav class="bar" aria-label="Filter">
+   ${[["all",t.all],["today",t.today],["done",t.doneF]].map(([k,l])=>html`<button key=${k} class=${"pill"+(filter===k?" on":"")} onClick=${()=>{setFilter(k);setDay(null)}}>${l}</button>`)}
+   <button class="add" aria-label=${t.add} onClick=${()=>{ask();setSheet(true)}}><${Ic} n="plus"/></button>
+  </nav>
+  ${sheet&&html`<${Sheet} t=${t} init=${day?new Date(new Date(day).setHours(9,0,0,0)).getTime():null} onClose=${()=>setSheet(false)} onSave=${r=>{setItems(v=>[...v,r]);setSheet(false);setSel(0)}}/>`}
+  ${cfg&&html`<${Settings} c=${c} set=${set} t=${t} onClose=${()=>setCfg(false)}/>`}
+  ${toast&&html`<div class="toast" role="alert"><span class="ring" style=${{width:42,height:42}}><${Ic} n="bell" s=${18}/></span><div class="rt">${toast.title}</div><button onClick=${()=>snooze(toast.id)}>${t.later}</button><button onClick=${()=>finish(toast.id)}>${t.finish}</button></div>`}
+ </main>`;
+}
+apply(loadC());
+if(navigator.userAgentData)document.documentElement.classList.add("cr");
+ReactDOM.createRoot(document.getElementById("root")).render(html`<${App}/>`);
+</script>
+</body>
+</html>
